@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   postgres:
-    image: pgvector/pgvector:pg17-trixie
+    image: pgvector/pgvector:pg18
     container_name: agentic-coding-postgres
     environment:
       POSTGRES_DB: agentic_coding_dev
