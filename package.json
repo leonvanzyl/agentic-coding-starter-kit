@@ -13,7 +13,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:dev": "drizzle-kit push",
-    "db:reset": "drizzle-kit drop && drizzle-kit push"
+    "db:reset": "drizzle-kit drop && drizzle-kit push",
+    "sync-template": "node create-agentic-app/scripts/sync-templates.js"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.53",

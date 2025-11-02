@@ -10,6 +10,10 @@
     "index.js",
     "template"
   ],
+  "scripts": {
+    "sync": "node scripts/sync-templates.js",
+    "prepublishOnly": "npm run sync"
+  },
   "keywords": [
     "ai",
     "agents",

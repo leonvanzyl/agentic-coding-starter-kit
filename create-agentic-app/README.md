@@ -43,41 +43,62 @@ Visit `http://localhost:3000` to see your app!
 
 To publish this package to npm:
 
-1. **Update package.json**: Set your author, repository URL, and version
-2. **Build the template**: Run the setup script to populate the template directory:
+1. **Update package.json**: Set your author, repository URL, and version in `create-agentic-app/package.json`
+2. **Test locally** (optional): Test the package before publishing:
    ```bash
-   # On Unix/Mac:
-   bash setup-template.sh
-
-   # On Windows:
-   powershell -ExecutionPolicy Bypass -File setup-template.ps1
-   ```
-3. **Test locally**: Test the package locally before publishing:
-   ```bash
+   cd create-agentic-app
    npm link
    cd /path/to/test/directory
    create-agentic-app my-test-app
    ```
-4. **Publish**: Publish to npm:
+3. **Publish**: The sync happens automatically!
    ```bash
+   cd create-agentic-app
    npm publish
    ```
+   The `prepublishOnly` hook will automatically sync the template from the main project before publishing.
 
 ## Template Updates
 
-When you update the boilerplate in the main project:
+### Automatic Sync (Recommended)
 
-1. Navigate to the project root
-2. Run the setup script to sync changes to the template:
+When publishing, the template syncs automatically via the `prepublishOnly` hook. Just run:
+```bash
+cd create-agentic-app
+npm publish
+```
+
+### Manual Sync
+
+If you want to sync without publishing:
+
+**From the project root:**
+```bash
+npm run sync-template
+```
+
+**Or from the create-agentic-app directory:**
+```bash
+npm run sync
+```
+
+The sync script automatically:
+- Copies all files from the main project to `template/`
+- Excludes build artifacts (node_modules, .next, lock files, etc.)
+- Removes `"private": true` from template's package.json
+- Removes the `sync-template` script (users don't need it)
+
+### Publishing Workflow
+
+1. **Make changes** to the main boilerplate project
+2. **Test your changes**
+3. **Bump version** in `create-agentic-app/package.json`
+4. **Publish**:
    ```bash
-   # Unix/Mac
-   bash create-agentic-app/setup-template.sh
-
-   # Windows
-   powershell -ExecutionPolicy Bypass -File create-agentic-app/setup-template.ps1
+   cd create-agentic-app
+   npm publish
    ```
-3. Bump the version in `package.json`
-4. Publish the updated package
+   (Template syncs automatically before publishing)
 
 ## License
 
