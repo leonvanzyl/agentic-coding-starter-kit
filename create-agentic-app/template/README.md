@@ -35,38 +35,7 @@ Before you begin, ensure you have the following installed on your machine:
 
 ## 🛠️ Quick Setup
 
-### Automated Setup (Recommended)
-
-Get started with a single command:
-
-```bash
-npx create-agentic-app@latest my-app
-cd my-app
-```
-
-Or create in the current directory:
-
-```bash
-npx create-agentic-app@latest .
-```
-
-The CLI will:
-- Copy all boilerplate files
-- Install dependencies with your preferred package manager (pnpm/npm/yarn)
-- Set up your environment file
-
-**Next steps after running the command:**
-
-1. Update `.env` with your API keys and database credentials
-2. Start the database: `docker compose up -d`
-3. Run migrations: `npm run db:migrate`
-4. Start dev server: `npm run dev`
-
-### Manual Setup (Alternative)
-
-If you prefer to set up manually:
-
-**1. Clone or Download the Repository**
+### 1. Clone or Download the Repository
 
 **Option A: Clone with Git**
 
@@ -78,13 +47,13 @@ cd agentic-coding-starter-kit
 **Option B: Download ZIP**
 Download the repository as a ZIP file and extract it to your desired location.
 
-**2. Install Dependencies**
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-**3. Environment Setup**
+### 3. Environment Setup
 
 Copy the example environment file:
 
@@ -113,7 +82,7 @@ OPENAI_MODEL="gpt-5-mini"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-**4. Database Setup**
+### 4. Database Setup
 
 Generate and run database migrations:
 
@@ -122,7 +91,7 @@ npm run db:generate
 npm run db:migrate
 ```
 
-**5. Start the Development Server**
+### 5. Start the Development Server
 
 ```bash
 npm run dev

@@ -1,0 +1,36 @@
+{
+  "name": "create-agentic-app",
+  "version": "1.0.0",
+  "description": "Scaffold a new agentic AI application with Next.js, Better Auth, and AI SDK",
+  "type": "module",
+  "bin": {
+    "create-agentic-app": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "template"
+  ],
+  "keywords": [
+    "ai",
+    "agents",
+    "nextjs",
+    "better-auth",
+    "starter-kit",
+    "boilerplate",
+    "scaffold",
+    "create-app"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/create-agentic-app.git"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "ora": "^8.1.1",
+    "prompts": "^2.4.2"
+  }
+}

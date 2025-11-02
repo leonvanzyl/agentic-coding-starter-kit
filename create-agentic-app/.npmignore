@@ -1,0 +1,9 @@
+# Don't publish setup scripts to npm
+setup-template.sh
+setup-template.ps1
+
+# Don't publish these to npm
+*.log
+.DS_Store
+.env
+.env.local
