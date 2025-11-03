@@ -6,7 +6,7 @@ A complete agentic coding boilerplate with authentication, PostgreSQL database, 
 
 - **🔐 Authentication**: Better Auth with Google OAuth integration
 - **🗃️ Database**: Drizzle ORM with PostgreSQL
-- **🤖 AI Integration**: Vercel AI SDK with OpenAI support
+- **🤖 AI Integration**: Vercel AI SDK with OpenRouter (access to 100+ AI models)
 - **🎨 UI Components**: shadcn/ui with Tailwind CSS
 - **⚡ Modern Stack**: Next.js 15, React 19, TypeScript
 - **📱 Responsive**: Mobile-first design approach
@@ -105,9 +105,11 @@ BETTER_AUTH_SECRET="your-random-32-character-secret-key-here"
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-# AI Integration (Optional - for chat functionality)
-OPENAI_API_KEY="sk-your-openai-api-key-here"
-OPENAI_MODEL="gpt-5-mini"
+# AI Integration via OpenRouter (Optional - for chat functionality)
+# Get your API key from: https://openrouter.ai/settings/keys
+# View available models at: https://openrouter.ai/models
+OPENROUTER_API_KEY="sk-or-v1-your-openrouter-api-key-here"
+OPENROUTER_MODEL="openai/gpt-5-mini"
 
 # App URL (for production deployments)
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -152,13 +154,14 @@ Your application will be available at [http://localhost:3000](http://localhost:3
    - `https://yourdomain.com/api/auth/callback/google` (production)
 6. Copy the **Client ID** and **Client Secret** to your `.env` file
 
-### OpenAI API Key
+### OpenRouter API Key
 
-1. Go to <a href="https://platform.openai.com/dashboard" target="_blank">OpenAI Platform</a>
-2. Navigate to **API Keys** in the sidebar
-3. Click **Create new secret key**
-4. Give it a name and copy the key
-5. Add it to your `.env` file as `OPENAI_API_KEY`
+1. Go to <a href="https://openrouter.ai/" target="_blank">OpenRouter</a>
+2. Sign up or log in to your account
+3. Navigate to **Settings** → **Keys** or visit <a href="https://openrouter.ai/settings/keys" target="_blank">Keys Settings</a>
+4. Click **Create Key** and give it a name
+5. Copy the API key and add it to your `.env` file as `OPENROUTER_API_KEY`
+6. Browse available models at <a href="https://openrouter.ai/models" target="_blank">OpenRouter Models</a>
 
 ## 🗂️ Project Structure
 
@@ -201,7 +204,7 @@ npm run db:reset     # Reset database (drop all tables)
 
 - **Home (`/`)**: Landing page with setup instructions and features overview
 - **Dashboard (`/dashboard`)**: Protected user dashboard with profile information
-- **Chat (`/chat`)**: AI-powered chat interface using OpenAI (requires authentication)
+- **Chat (`/chat`)**: AI-powered chat interface using OpenRouter (requires authentication)
 
 ## 🚀 Deployment
 
@@ -230,8 +233,8 @@ Ensure these are set in your production environment:
 - `BETTER_AUTH_SECRET` - Secure random 32+ character string
 - `GOOGLE_CLIENT_ID` - Google OAuth Client ID
 - `GOOGLE_CLIENT_SECRET` - Google OAuth Client Secret
-- `OPENAI_API_KEY` - OpenAI API key (optional)
-- `OPENAI_MODEL` - OpenAI model name (optional, defaults to gpt-5-mini)
+- `OPENROUTER_API_KEY` - OpenRouter API key (optional, for AI chat functionality)
+- `OPENROUTER_MODEL` - Model name from OpenRouter (optional, defaults to openai/gpt-5-mini)
 - `NEXT_PUBLIC_APP_URL` - Your production domain
 
 ## 🎥 Tutorial Video

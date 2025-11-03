@@ -1,11 +1,11 @@
-import { openai } from "@ai-sdk/openai";
+import { openrouter } from "@openrouter/ai-sdk-provider";
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
   const result = streamText({
-    model: openai(process.env.OPENAI_MODEL || "gpt-5-mini"),
+    model: openrouter(process.env.OPENROUTER_MODEL || "openai/gpt-5-mini"),
     messages: convertToModelMessages(messages),
   });
 
