@@ -78,6 +78,17 @@ async function sync() {
     console.log(`${colors.cyan}📦 Copying project files...${colors.reset}`);
     await copyWithExclusions(projectRoot, templateDir);
 
+    // Explicitly copy .gitignore file as _gitignore (npm excludes .gitignore by default)
+    console.log(`${colors.cyan}📄 Copying .gitignore as _gitignore...${colors.reset}`);
+    const gitignoreSrc = path.join(projectRoot, '.gitignore');
+    const gitignoreDest = path.join(templateDir, '_gitignore');
+    if (await fs.pathExists(gitignoreSrc)) {
+      await fs.copy(gitignoreSrc, gitignoreDest, { overwrite: true });
+      console.log(`${colors.green}✓${colors.reset} .gitignore copied as _gitignore`);
+    } else {
+      console.log(`${colors.yellow}⚠${colors.reset} .gitignore not found in project root`);
+    }
+
     // Process template package.json
     console.log(`${colors.cyan}⚙️  Updating template package.json...${colors.reset}`);
     const templatePackageJsonPath = path.join(templateDir, 'package.json');

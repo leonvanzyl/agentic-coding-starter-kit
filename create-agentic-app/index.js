@@ -100,6 +100,15 @@ async function main() {
       await fs.copy(envExamplePath, envPath);
     }
 
+    // Rename _gitignore to .gitignore (npm excludes .gitignore by default)
+    const gitignoreTemplatePath = path.join(targetDir, '_gitignore');
+    const gitignorePath = path.join(targetDir, '.gitignore');
+
+    if (fs.existsSync(gitignoreTemplatePath)) {
+      spinner.text = 'Setting up .gitignore file...';
+      await fs.move(gitignoreTemplatePath, gitignorePath, { overwrite: true });
+    }
+
     // Update package.json name if not current directory
     if (projectDir !== '.') {
       const packageJsonPath = path.join(targetDir, 'package.json');
