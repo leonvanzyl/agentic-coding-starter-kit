@@ -128,6 +128,30 @@ async function main() {
       console.log(chalk.yellow(`\nPlease run "${packageManager} install" manually.\n`));
     }
 
+    // Initialize Git repository
+    console.log();
+    const gitSpinner = ora('Initializing Git repository...').start();
+
+    try {
+      // Check if git is available
+      execSync('git --version', { stdio: 'pipe' });
+
+      // Initialize git repo if not already initialized
+      if (!fs.existsSync(path.join(targetDir, '.git'))) {
+        execSync('git init', { cwd: targetDir, stdio: 'pipe' });
+        execSync('git add .', { cwd: targetDir, stdio: 'pipe' });
+        execSync('git commit -m "Initial commit from create-agentic-app"', {
+          cwd: targetDir,
+          stdio: 'pipe'
+        });
+        gitSpinner.succeed(chalk.green('Git repository initialized!'));
+      } else {
+        gitSpinner.info(chalk.blue('Git repository already exists'));
+      }
+    } catch (error) {
+      gitSpinner.warn(chalk.yellow('Git not found - skipping repository initialization'));
+    }
+
     // Display next steps
     console.log();
     console.log(chalk.bold.green('✨ Your agentic app is ready!\n'));
