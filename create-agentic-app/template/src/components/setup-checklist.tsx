@@ -11,7 +11,7 @@ type DiagnosticsResponse = {
     BETTER_AUTH_SECRET: boolean;
     GOOGLE_CLIENT_ID: boolean;
     GOOGLE_CLIENT_SECRET: boolean;
-    OPENAI_API_KEY: boolean;
+    OPENROUTER_API_KEY: boolean;
     NEXT_PUBLIC_APP_URL: boolean;
   };
   database: {
@@ -99,7 +99,7 @@ export function SetupChecklist() {
       label: "AI integration (optional)",
       ok: !!data?.ai.configured,
       detail: !data?.ai.configured
-        ? "Set OPENAI_API_KEY for AI chat"
+        ? "Set OPENROUTER_API_KEY for AI chat"
         : undefined,
     },
   ] as const;

@@ -77,7 +77,7 @@ export default function Home() {
               AI Ready
             </h3>
             <p className="text-sm text-muted-foreground">
-              Vercel AI SDK with OpenAI integration
+              Vercel AI SDK with OpenRouter integration
             </p>
           </div>
           <div className="p-6 border rounded-lg">
@@ -108,7 +108,7 @@ export default function Home() {
                 <li>POSTGRES_URL (PostgreSQL connection string)</li>
                 <li>GOOGLE_CLIENT_ID (OAuth credentials)</li>
                 <li>GOOGLE_CLIENT_SECRET (OAuth credentials)</li>
-                <li>OPENAI_API_KEY (for AI functionality)</li>
+                <li>OPENROUTER_API_KEY (for AI functionality)</li>
               </ul>
             </div>
             <div className="p-4 border rounded-lg">

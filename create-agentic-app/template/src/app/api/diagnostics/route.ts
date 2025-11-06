@@ -9,7 +9,7 @@ interface DiagnosticsResponse {
     BETTER_AUTH_SECRET: boolean;
     GOOGLE_CLIENT_ID: boolean;
     GOOGLE_CLIENT_SECRET: boolean;
-    OPENAI_API_KEY: boolean;
+    OPENROUTER_API_KEY: boolean;
     NEXT_PUBLIC_APP_URL: boolean;
   };
   database: {
@@ -33,34 +33,55 @@ export async function GET(req: Request) {
     BETTER_AUTH_SECRET: Boolean(process.env.BETTER_AUTH_SECRET),
     GOOGLE_CLIENT_ID: Boolean(process.env.GOOGLE_CLIENT_ID),
     GOOGLE_CLIENT_SECRET: Boolean(process.env.GOOGLE_CLIENT_SECRET),
-    OPENAI_API_KEY: Boolean(process.env.OPENAI_API_KEY),
+    OPENROUTER_API_KEY: Boolean(process.env.OPENROUTER_API_KEY),
     NEXT_PUBLIC_APP_URL: Boolean(process.env.NEXT_PUBLIC_APP_URL),
   } as const;
 
-  // Database checks
+  // Database checks with timeout
   let dbConnected = false;
   let schemaApplied = false;
   let dbError: string | undefined;
   if (env.POSTGRES_URL) {
     try {
-      const [{ db }, { sql }, schema] = await Promise.all([
-        import("@/lib/db"),
-        import("drizzle-orm"),
-        import("@/lib/schema"),
-      ]);
-      // Ping DB
-      await db.execute(sql`select 1`);
-      dbConnected = true;
-      try {
-        // Touch a known table to verify migrations
-        await db.select().from(schema.user).limit(1);
-        schemaApplied = true;
-      } catch {
-        schemaApplied = false;
-      }
-    } catch (err) {
+      // Add timeout to prevent hanging on unreachable database
+      const dbCheckPromise = (async () => {
+        const [{ db }, { sql }, schema] = await Promise.all([
+          import("@/lib/db"),
+          import("drizzle-orm"),
+          import("@/lib/schema"),
+        ]);
+
+        // Ping DB - this will actually attempt to connect
+        const result = await db.execute(sql`SELECT 1 as ping`);
+        if (!result) {
+          throw new Error("Database query returned no result");
+        }
+        dbConnected = true;
+
+        try {
+          // Touch a known table to verify migrations
+          await db.select().from(schema.user).limit(1);
+          schemaApplied = true;
+        } catch {
+          schemaApplied = false;
+          // If we can't query the user table, it's likely migrations haven't run
+          if (!dbError) {
+            dbError = "Schema not applied. Run: npm run db:migrate";
+          }
+        }
+      })();
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Database connection timeout (5s)")), 5000)
+      );
+
+      await Promise.race([dbCheckPromise, timeoutPromise]);
+    } catch {
       dbConnected = false;
-      dbError = err instanceof Error ? err.message : "Unknown database error";
+      schemaApplied = false;
+
+      // Provide user-friendly error messages
+      dbError = "Database not connected. Please start your PostgreSQL database and verify your POSTGRES_URL in .env";
     }
   } else {
     dbConnected = false;
@@ -92,7 +113,7 @@ export async function GET(req: Request) {
 
   const authConfigured =
     env.BETTER_AUTH_SECRET && env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET;
-  const aiConfigured = env.OPENAI_API_KEY; // We avoid live-calling the AI provider here
+  const aiConfigured = env.OPENROUTER_API_KEY; // We avoid live-calling the AI provider here
 
   const overallStatus: StatusLevel = (() => {
     if (!env.POSTGRES_URL || !dbConnected || !schemaApplied) return "error";
