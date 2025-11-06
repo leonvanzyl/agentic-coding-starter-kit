@@ -1,6 +1,6 @@
 {
   "name": "agentic-coding-starter-kit",
-  "version": "0.1.1",
+  "version": "1.1.2",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "pnpm run db:migrate && next build",
