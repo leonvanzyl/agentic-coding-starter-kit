@@ -1,8 +1,28 @@
 {
   "mcpServers": {
-    "shadcn": {
+    "shadcn-unix": {
       "command": "npx",
       "args": ["shadcn@latest", "mcp"]
+    },
+    "shadcn-windows": {
+      "command": "cmd",
+      "args": ["/c", "npx", "shadcn@latest", "mcp"]
+    },
+    "playwright-unix": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "playwright-windows": {
+      "command": "cmd",
+      "args": ["/c", "npx", "@playwright/mcp@latest"]
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "YOUR_API_KEY"
+      }
     }
   }
 }
