@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SetupChecklist } from "@/components/setup-checklist";
 import { useDiagnostics } from "@/hooks/use-diagnostics";
 import { StarterPromptModal } from "@/components/starter-prompt-modal";
-import { Video, Shield, Database, Palette, Bot } from "lucide-react";
+import { Video, Shield, Database, Palette, Bot, Sparkles } from "lucide-react";
 
 export default function Home() {
   const { isAuthReady, isAiReady, loading } = useDiagnostics();
@@ -154,6 +154,29 @@ export default function Home() {
                     className="w-full"
                   >
                     <Link href="/chat">Try AI Chat</Link>
+                  </Button>
+                )}
+                {loading || !isAuthReady ? (
+                  <Button
+                    size="sm"
+                    className="w-full"
+                    disabled={true}
+                    variant="outline"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Plushie Transformer
+                  </Button>
+                ) : (
+                  <Button
+                    asChild
+                    size="sm"
+                    className="w-full"
+                    variant="outline"
+                  >
+                    <Link href="/plushie">
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Plushie Transformer
+                    </Link>
                   </Button>
                 )}
               </div>
