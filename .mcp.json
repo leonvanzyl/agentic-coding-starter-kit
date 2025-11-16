@@ -16,6 +16,10 @@
       "headers": {
         "CONTEXT7_API_KEY": "YOUR_API_KEY"
       }
+    },
+    "next-devtools": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "next-devtools-mcp@latest"]
     }
   }
 }
