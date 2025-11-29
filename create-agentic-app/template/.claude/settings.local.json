@@ -11,9 +11,6 @@
       "mcp__playwright__browser_close",
       "Bash(git add:*)",
       "Bash(git log:*)"
-    ],
-    "additionalDirectories": [
-      "C:\\c\\Projects\\nextjs-better-auth-postgresql-starter-kit"
     ]
   },
   "enableAllProjectMcpServers": true,
