@@ -15,9 +15,9 @@ A complete agentic coding boilerplate with authentication, PostgreSQL database, 
 
 Watch the complete walkthrough of this agentic coding template:
 
-[![Agentic Coding Boilerplate Tutorial](https://img.youtube.com/vi/T0zFZsr_d0Q/maxresdefault.jpg)](https://youtu.be/T0zFZsr_d0Q)
+[![Agentic Coding Boilerplate Tutorial](https://img.youtube.com/vi/JQ86N3WOAh4/maxresdefault.jpg)](https://youtu.be/JQ86N3WOAh4)
 
-<a href="https://youtu.be/T0zFZsr_d0Q" target="_blank" rel="noopener noreferrer">🔗 Watch on YouTube</a>
+<a href="https://youtu.be/JQ86N3WOAh4" target="_blank" rel="noopener noreferrer">🔗 Watch on YouTube</a>
 
 ## ☕ Support This Project
 
@@ -241,7 +241,7 @@ Ensure these are set in your production environment:
 
 Watch my comprehensive tutorial on how to use this agentic coding boilerplate to build AI-powered applications:
 
-<a href="https://youtu.be/T0zFZsr_d0Q" target="_blank" rel="noopener noreferrer">📺 YouTube Tutorial - Building with Agentic Coding Boilerplate</a>
+<a href="https://youtu.be/JQ86N3WOAh4" target="_blank" rel="noopener noreferrer">📺 YouTube Tutorial - Building with Agentic Coding Boilerplate</a>
 
 ## 🤝 Contributing
 
