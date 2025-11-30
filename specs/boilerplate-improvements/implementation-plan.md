@@ -82,7 +82,7 @@
   - [ ] Add rate limiting (10 requests/minute per user)
   - [ ] Add Zod validation for messages
   - [ ] Add message length limits
-- [ ] Modify `src/app/api/diagnostics/route.ts` - Restrict to authenticated admins
+- [x] Modify `src/app/api/diagnostics/route.ts` - Keep public (used by homepage setup checklist before login)
 
 ### SEO
 - [ ] Modify `src/app/layout.tsx` - Add Open Graph metadata
