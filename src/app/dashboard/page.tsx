@@ -1,11 +1,11 @@
 "use client";
 
-import { useSession } from "@/lib/auth-client";
+import Link from "next/link";
+import { Lock } from "lucide-react";
 import { UserProfile } from "@/components/auth/user-profile";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
 import { useDiagnostics } from "@/hooks/use-diagnostics";
-import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
 
 export default function DashboardPage() {
   const { data: session, isPending } = useSession();

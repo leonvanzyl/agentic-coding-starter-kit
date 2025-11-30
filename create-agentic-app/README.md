@@ -20,7 +20,7 @@ npx create-agentic-app@latest my-app
 
 This starter kit includes:
 
-- **Next.js 15** with App Router and Turbopack
+- **Next.js 16** with App Router and Turbopack
 - **Better Auth** for authentication (email/password, OAuth)
 - **AI SDK** by Vercel for AI chat functionality
 - **Drizzle ORM** with PostgreSQL database

@@ -42,7 +42,7 @@ The only things to preserve are:
 
 ## Tech Stack
 
-- Next.js 15 with App Router
+- Next.js 16 with App Router
 - TypeScript
 - Tailwind CSS
 - Better Auth for authentication

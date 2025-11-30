@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { SetupChecklist } from "@/components/setup-checklist";
-import { useDiagnostics } from "@/hooks/use-diagnostics";
-import { StarterPromptModal } from "@/components/starter-prompt-modal";
 import { Video, Shield, Database, Palette, Bot } from "lucide-react";
+import { SetupChecklist } from "@/components/setup-checklist";
+import { StarterPromptModal } from "@/components/starter-prompt-modal";
+import { Button } from "@/components/ui/button";
+import { useDiagnostics } from "@/hooks/use-diagnostics";
 
 export default function Home() {
   const { isAuthReady, isAiReady, loading } = useDiagnostics();

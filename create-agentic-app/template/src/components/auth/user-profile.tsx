@@ -1,7 +1,8 @@
 "use client";
 
-import { useSession, signOut } from "@/lib/auth-client";
-import { SignInButton } from "./sign-in-button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { User, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,9 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { User, LogOut } from "lucide-react";
+import { useSession, signOut } from "@/lib/auth-client";
+import { SignInButton } from "./sign-in-button";
 
 export function UserProfile() {
   const { data: session, isPending } = useSession();

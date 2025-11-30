@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type DiagnosticsResponse = {
   timestamp: string;

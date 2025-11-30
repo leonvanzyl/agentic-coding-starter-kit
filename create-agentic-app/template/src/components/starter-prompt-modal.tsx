@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Copy, Check } from "lucide-react";
 
 const STARTER_PROMPT = `I'm working with an agentic coding boilerplate project that includes authentication, database integration, and AI capabilities. Here's what's already set up:
 
@@ -50,7 +50,7 @@ The only things to preserve are:
 - **Build and development scripts** (keep all npm/pnpm scripts in package.json)
 
 ## Tech Stack
-- Next.js 15 with App Router
+- Next.js 16 with App Router
 - TypeScript
 - Tailwind CSS
 - Better Auth for authentication

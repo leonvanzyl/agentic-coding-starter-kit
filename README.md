@@ -9,7 +9,7 @@ A complete agentic coding boilerplate with authentication, PostgreSQL database, 
 - **🤖 AI Integration**: Vercel AI SDK with OpenRouter (access to 100+ AI models)
 - **📁 File Storage**: Automatic local/Vercel Blob storage with seamless switching
 - **🎨 UI Components**: shadcn/ui with Tailwind CSS
-- **⚡ Modern Stack**: Next.js 15, React 19, TypeScript
+- **⚡ Modern Stack**: Next.js 16, React 19, TypeScript
 - **📱 Responsive**: Mobile-first design approach
 
 ## 🎥 Video Tutorial

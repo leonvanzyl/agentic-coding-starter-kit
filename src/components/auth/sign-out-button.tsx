@@ -1,8 +1,8 @@
 "use client";
 
-import { signOut, useSession } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { signOut, useSession } from "@/lib/auth-client";
 
 export function SignOutButton() {
   const { data: session, isPending } = useSession();

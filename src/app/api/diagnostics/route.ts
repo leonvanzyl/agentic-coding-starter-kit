@@ -1,4 +1,6 @@
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 
 type StatusLevel = "ok" | "warn" | "error";
 
@@ -32,6 +34,14 @@ interface DiagnosticsResponse {
 }
 
 export async function GET(req: Request) {
+  // Require authentication for diagnostics endpoint
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return NextResponse.json(
+      { error: "Unauthorized. Please sign in to access diagnostics." },
+      { status: 401 }
+    );
+  }
   const env = {
     POSTGRES_URL: Boolean(process.env.POSTGRES_URL),
     BETTER_AUTH_SECRET: Boolean(process.env.BETTER_AUTH_SECRET),
@@ -137,7 +147,7 @@ export async function GET(req: Request) {
     database: {
       connected: dbConnected,
       schemaApplied,
-      error: dbError,
+      ...(dbError !== undefined && { error: dbError }),
     },
     auth: {
       configured: authConfigured,

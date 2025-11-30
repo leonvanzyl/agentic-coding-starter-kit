@@ -2,11 +2,11 @@
 
 ## Project Overview
 
-This is a Next.js 15 boilerplate for building AI-powered applications with authentication, database, and modern UI components.
+This is a Next.js 16 boilerplate for building AI-powered applications with authentication, database, and modern UI components.
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 with App Router, React 19, TypeScript
+- **Framework**: Next.js 16 with App Router, React 19, TypeScript
 - **AI Integration**: Vercel AI SDK 5 + OpenRouter (access to 100+ AI models)
 - **Authentication**: BetterAuth with Google OAuth
 - **Database**: PostgreSQL with Drizzle ORM
@@ -182,7 +182,7 @@ The project includes technical documentation in `docs/`:
    - Use TypeScript with proper types
 
 9. **API Routes**
-   - Follow Next.js 15 App Router conventions
+   - Follow Next.js 16 App Router conventions
    - Use Route Handlers (route.ts files)
    - Return Response objects
    - Handle errors appropriately

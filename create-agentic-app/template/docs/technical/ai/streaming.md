@@ -11,9 +11,9 @@ If you are unfamiliar with the concepts of [Prompt Engineering](/docs/advanced/p
 To follow this quickstart, you'll need:
 
 - Node.js 18+ and pnpm installed on your local development machine.
-- An OpenAI API key.
+- An OpenRouter API key.
 
-If you haven't obtained your OpenAI API key, you can do so by [signing up](https://platform.openai.com/signup/) on the OpenAI website.
+If you haven't obtained your OpenRouter API key, you can do so by [signing up](https://openrouter.ai/) on the OpenRouter website and visiting [https://openrouter.ai/settings/keys](https://openrouter.ai/settings/keys).
 
 ## Create Your Application
 
@@ -35,7 +35,7 @@ Navigate to the newly created directory:
 
 ### Install dependencies
 
-Install `ai`, `@ai-sdk/react`, and `@ai-sdk/openai`, the AI package, AI SDK's React hooks, and AI SDK's [ OpenAI provider ](/providers/ai-sdk-providers/openai) respectively.
+Install `ai`, `@ai-sdk/react`, and `@openrouter/ai-sdk-provider`, the AI package, AI SDK's React hooks, and the OpenRouter provider respectively.
 
 <Note>
   The AI SDK is designed to be a unified interface to interact with any large
@@ -47,39 +47,39 @@ Install `ai`, `@ai-sdk/react`, and `@ai-sdk/openai`, the AI package, AI SDK's Re
 <div className="my-4">
   <Tabs items={['pnpm', 'npm', 'yarn', 'bun']}>
     <Tab>
-      <Snippet text="pnpm add ai @ai-sdk/react @ai-sdk/openai zod" dark />
+      <Snippet text="pnpm add ai @ai-sdk/react @openrouter/ai-sdk-provider zod" dark />
     </Tab>
     <Tab>
-      <Snippet text="npm install ai @ai-sdk/react @ai-sdk/openai zod" dark />
+      <Snippet text="npm install ai @ai-sdk/react @openrouter/ai-sdk-provider zod" dark />
     </Tab>
     <Tab>
-      <Snippet text="yarn add ai @ai-sdk/react @ai-sdk/openai zod" dark />
+      <Snippet text="yarn add ai @ai-sdk/react @openrouter/ai-sdk-provider zod" dark />
     </Tab>
 
     <Tab>
-      <Snippet text="bun add ai @ai-sdk/react @ai-sdk/openai zod" dark />
+      <Snippet text="bun add ai @ai-sdk/react @openrouter/ai-sdk-provider zod" dark />
     </Tab>
 
   </Tabs>
 </div>
 
-### Configure OpenAI API key
+### Configure OpenRouter API key
 
-Create a `.env.local` file in your project root and add your OpenAI API Key. This key is used to authenticate your application with the OpenAI service.
+Create a `.env.local` file in your project root and add your OpenRouter API Key. This key is used to authenticate your application with OpenRouter.
 
 <Snippet text="touch .env.local" />
 
 Edit the `.env.local` file:
 
 ```env filename=".env.local"
-OPENAI_API_KEY=xxxxxxxxx
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxx
+OPENROUTER_MODEL=openai/gpt-5-mini
 ```
 
-Replace `xxxxxxxxx` with your actual OpenAI API key.
+Replace the API key with your actual OpenRouter API key from [https://openrouter.ai/settings/keys](https://openrouter.ai/settings/keys).
 
 <Note className="mb-4">
-  The AI SDK's OpenAI Provider will default to using the `OPENAI_API_KEY`
-  environment variable.
+  You can browse available models at [https://openrouter.ai/models](https://openrouter.ai/models) and set your preferred model via the `OPENROUTER_MODEL` environment variable.
 </Note>
 
 ## Create a Route Handler
@@ -87,7 +87,7 @@ Replace `xxxxxxxxx` with your actual OpenAI API key.
 Create a route handler, `app/api/chat/route.ts` and add the following code:
 
 ```tsx filename="app/api/chat/route.ts"
-import { openai } from "@ai-sdk/openai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 
 // Allow streaming responses up to 30 seconds
@@ -96,8 +96,13 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
+  // Initialize OpenRouter with API key from environment
+  const openrouter = createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+  });
+
   const result = streamText({
-    model: openai(process.env.OPENAI_MODEL || "gpt-5-mini"),
+    model: openrouter(process.env.OPENROUTER_MODEL || "openai/gpt-5-mini"),
     messages: convertToModelMessages(messages),
   });
 
@@ -108,7 +113,7 @@ export async function POST(req: Request) {
 Let's take a look at what is happening in this code:
 
 1. Define an asynchronous `POST` request handler and extract `messages` from the body of the request. The `messages` variable contains a history of the conversation between you and the chatbot and provides the chatbot with the necessary context to make the next generation. The `messages` are of UIMessage type, which are designed for use in application UI - they contain the entire message history and associated metadata like timestamps.
-2. Call [`streamText`](/docs/reference/ai-sdk-core/stream-text), which is imported from the `ai` package. This function accepts a configuration object that contains a `model` provider (imported from `@ai-sdk/openai`) and `messages` (defined in step 1). You can pass additional [settings](/docs/ai-sdk-core/settings) to further customise the model's behaviour. The `messages` key expects a `ModelMessage[]` array. This type is different from `UIMessage` in that it does not include metadata, such as timestamps or sender information. To convert between these types, we use the `convertToModelMessages` function, which strips the UI-specific metadata and transforms the `UIMessage[]` array into the `ModelMessage[]` format that the model expects.
+2. Call [`streamText`](/docs/reference/ai-sdk-core/stream-text), which is imported from the `ai` package. This function accepts a configuration object that contains a `model` provider (created using `createOpenRouter` from `@openrouter/ai-sdk-provider`) and `messages` (defined in step 1). You can pass additional [settings](/docs/ai-sdk-core/settings) to further customise the model's behaviour. The `messages` key expects a `ModelMessage[]` array. This type is different from `UIMessage` in that it does not include metadata, such as timestamps or sender information. To convert between these types, we use the `convertToModelMessages` function, which strips the UI-specific metadata and transforms the `UIMessage[]` array into the `ModelMessage[]` format that the model expects.
 3. The `streamText` function returns a [`StreamTextResult`](/docs/reference/ai-sdk-core/stream-text#result-object). This result object contains the [ `toUIMessageStreamResponse` ](/docs/reference/ai-sdk-core/stream-text#to-data-stream-response) function which converts the result to a streamed response object.
 4. Finally, return the result to the client to stream the response.
 
@@ -199,7 +204,7 @@ Let's enhance your chatbot by adding a simple weather tool.
 Modify your `app/api/chat/route.ts` file to include the new weather tool:
 
 ```tsx filename="app/api/chat/route.ts" highlight="2,13-27"
-import { openai } from "@ai-sdk/openai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, UIMessage, convertToModelMessages, tool } from "ai";
 import { z } from "zod";
 
@@ -208,8 +213,12 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
+  const openrouter = createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+  });
+
   const result = streamText({
-    model: openai(process.env.OPENAI_MODEL || "gpt-5-mini"),
+    model: openrouter(process.env.OPENROUTER_MODEL || "openai/gpt-5-mini"),
     messages: convertToModelMessages(messages),
     tools: {
       weather: tool({
@@ -320,7 +329,7 @@ To solve this, you can enable multi-step tool calls using `stopWhen`. By default
 Modify your `app/api/chat/route.ts` file to include the `stopWhen` condition:
 
 ```tsx filename="app/api/chat/route.ts"
-import { openai } from "@ai-sdk/openai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import {
   streamText,
   UIMessage,
@@ -335,8 +344,12 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
+  const openrouter = createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+  });
+
   const result = streamText({
-    model: openai(process.env.OPENAI_MODEL || "gpt-5-mini"),
+    model: openrouter(process.env.OPENROUTER_MODEL || "openai/gpt-5-mini"),
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools: {
@@ -374,7 +387,7 @@ By setting `stopWhen: stepCountIs(5)`, you're allowing the model to use up to 5 
 Update your `app/api/chat/route.ts` file to add a new tool to convert the temperature from Fahrenheit to Celsius:
 
 ```tsx filename="app/api/chat/route.ts" highlight="34-47"
-import { openai } from "@ai-sdk/openai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import {
   streamText,
   UIMessage,
@@ -389,8 +402,12 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
 
+  const openrouter = createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+  });
+
   const result = streamText({
-    model: openai(process.env.OPENAI_MODEL || "gpt-5-mini"),
+    model: openrouter(process.env.OPENROUTER_MODEL || "openai/gpt-5-mini"),
     messages: convertToModelMessages(messages),
     stopWhen: stepCountIs(5),
     tools: {
