@@ -3,11 +3,6 @@ import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText, UIMessage, convertToModelMessages } from "ai";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
-import {
-  checkRateLimit,
-  createRateLimitResponse,
-  rateLimitConfigs,
-} from "@/lib/rate-limit";
 
 // Zod schema for message validation
 const messagePartSchema = z.object({
@@ -34,13 +29,6 @@ export async function POST(req: Request) {
       status: 401,
       headers: { "Content-Type": "application/json" },
     });
-  }
-
-  // Rate limiting by user ID
-  const rateLimitKey = `chat:${session.user.id}`;
-  const rateLimit = checkRateLimit(rateLimitKey, rateLimitConfigs.chat);
-  if (!rateLimit.allowed) {
-    return createRateLimitResponse(rateLimit.resetTime);
   }
 
   // Parse and validate request body
