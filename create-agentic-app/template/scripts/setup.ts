@@ -7,9 +7,12 @@
 import { existsSync, copyFileSync, readFileSync } from "fs";
 import { createInterface } from "readline";
 import { execSync } from "child_process";
-import { join } from "path";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
-const ROOT_DIR = join(import.meta.dirname, "..");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT_DIR = join(__dirname, "..");
 const ENV_EXAMPLE = join(ROOT_DIR, "env.example");
 const ENV_FILE = join(ROOT_DIR, ".env");
 
