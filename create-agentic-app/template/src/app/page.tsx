@@ -43,7 +43,7 @@ export default function Home() {
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg border">
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
-                src="https://www.youtube.com/embed/T0zFZsr_d0Q"
+                src="https://www.youtube.com/embed/JQ86N3WOAh4"
                 title="Agentic Coding Boilerplate Tutorial"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

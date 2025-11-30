@@ -7,6 +7,7 @@ A complete agentic coding boilerplate with authentication, PostgreSQL database, 
 - **🔐 Authentication**: Better Auth with Google OAuth integration
 - **🗃️ Database**: Drizzle ORM with PostgreSQL
 - **🤖 AI Integration**: Vercel AI SDK with OpenRouter (access to 100+ AI models)
+- **📁 File Storage**: Automatic local/Vercel Blob storage with seamless switching
 - **🎨 UI Components**: shadcn/ui with Tailwind CSS
 - **⚡ Modern Stack**: Next.js 15, React 19, TypeScript
 - **📱 Responsive**: Mobile-first design approach
@@ -113,6 +114,11 @@ OPENROUTER_MODEL="openai/gpt-5-mini"
 
 # App URL (for production deployments)
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
+
+# File Storage (Optional - for file upload functionality)
+# Leave empty to use local storage (public/uploads/) in development
+# Set to enable Vercel Blob storage in production
+BLOB_READ_WRITE_TOKEN=""
 ```
 
 **4. Database Setup**
@@ -163,6 +169,25 @@ Your application will be available at [http://localhost:3000](http://localhost:3
 5. Copy the API key and add it to your `.env` file as `OPENROUTER_API_KEY`
 6. Browse available models at <a href="https://openrouter.ai/models" target="_blank">OpenRouter Models</a>
 
+### File Storage Configuration
+
+The project includes a flexible storage abstraction that automatically switches between local filesystem storage (development) and Vercel Blob storage (production).
+
+**For Development (Local Storage):**
+- Leave `BLOB_READ_WRITE_TOKEN` empty or unset in your `.env` file
+- Files are automatically stored in `public/uploads/`
+- Files are served at `/uploads/` URL path
+- No external service or configuration needed
+
+**For Production (Vercel Blob):**
+1. Go to <a href="https://vercel.com/dashboard" target="_blank">Vercel Dashboard</a>
+2. Navigate to your project → **Storage** tab
+3. Click **Create** → **Blob**
+4. Copy the `BLOB_READ_WRITE_TOKEN` from the integration
+5. Add it to your production environment variables
+
+The storage service automatically detects which backend to use based on the presence of the `BLOB_READ_WRITE_TOKEN` environment variable.
+
 ## 🗂️ Project Structure
 
 ```
@@ -182,6 +207,7 @@ src/
     ├── auth-client.ts    # Client-side auth utilities
     ├── db.ts             # Database connection
     ├── schema.ts         # Database schema
+    ├── storage.ts        # File storage abstraction
     └── utils.ts          # General utilities
 ```
 
@@ -236,6 +262,7 @@ Ensure these are set in your production environment:
 - `OPENROUTER_API_KEY` - OpenRouter API key (optional, for AI chat functionality)
 - `OPENROUTER_MODEL` - Model name from OpenRouter (optional, defaults to openai/gpt-5-mini)
 - `NEXT_PUBLIC_APP_URL` - Your production domain
+- `BLOB_READ_WRITE_TOKEN` - Vercel Blob token (optional, uses local storage if not set)
 
 ## 🎥 Tutorial Video
 

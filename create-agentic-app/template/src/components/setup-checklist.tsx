@@ -26,6 +26,10 @@ type DiagnosticsResponse = {
   ai: {
     configured: boolean;
   };
+  storage: {
+    configured: boolean;
+    type: "local" | "remote";
+  };
   overallStatus: "ok" | "warn" | "error";
 };
 
@@ -100,6 +104,16 @@ export function SetupChecklist() {
       ok: !!data?.ai.configured,
       detail: !data?.ai.configured
         ? "Set OPENROUTER_API_KEY for AI chat"
+        : undefined,
+    },
+    {
+      key: "storage",
+      label: "File storage (optional)",
+      ok: true, // Always considered "ok" since local storage works
+      detail: data?.storage
+        ? data.storage.type === "remote"
+          ? "Using Vercel Blob storage"
+          : "Using local storage (public/uploads/)"
         : undefined,
     },
   ] as const;

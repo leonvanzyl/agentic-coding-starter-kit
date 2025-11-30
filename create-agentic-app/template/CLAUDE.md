@@ -68,6 +68,7 @@ src/
     ├── auth-client.ts           # Better Auth client hooks
     ├── db.ts                    # Database connection
     ├── schema.ts                # Drizzle schema (users, sessions, etc.)
+    ├── storage.ts               # File storage abstraction (Vercel Blob / local)
     └── utils.ts                 # Utility functions (cn, etc.)
 ```
 
@@ -92,6 +93,9 @@ OPENROUTER_MODEL=openai/gpt-5-mini  # or any model from openrouter.ai/models
 
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# File Storage (optional)
+BLOB_READ_WRITE_TOKEN=  # Leave empty for local dev, set for Vercel Blob in production
 ```
 
 ## Available Scripts
@@ -162,14 +166,22 @@ The project includes technical documentation in `docs/`:
    - Always run migrations after schema changes
    - PostgreSQL is the database (not SQLite, MySQL, etc.)
 
-7. **Component Creation**
+7. **File Storage**
+
+   - Use the storage abstraction from `@/lib/storage`
+   - Automatically uses local storage (dev) or Vercel Blob (production)
+   - Import: `import { upload, deleteFile } from "@/lib/storage"`
+   - Example: `const result = await upload(buffer, "avatar.png", "avatars")`
+   - Storage switches based on `BLOB_READ_WRITE_TOKEN` environment variable
+
+8. **Component Creation**
 
    - Use existing shadcn/ui components when possible
    - Follow the established patterns in `src/components/ui/`
    - Support both light and dark modes
    - Use TypeScript with proper types
 
-8. **API Routes**
+9. **API Routes**
    - Follow Next.js 15 App Router conventions
    - Use Route Handlers (route.ts files)
    - Return Response objects
@@ -216,6 +228,14 @@ The project includes technical documentation in `docs/`:
 2. Frontend: `src/app/chat/page.tsx`
 3. Reference streaming docs: `docs/technical/ai/streaming.md`
 4. Remember to use OpenRouter, not direct OpenAI
+
+**Working with file storage:**
+
+1. Import storage functions: `import { upload, deleteFile } from "@/lib/storage"`
+2. Upload files: `const result = await upload(fileBuffer, "filename.png", "folder")`
+3. Delete files: `await deleteFile(result.url)`
+4. Storage automatically uses local filesystem in dev, Vercel Blob in production
+5. Local files are saved to `public/uploads/` and served at `/uploads/`
 
 ## Package Manager
 
