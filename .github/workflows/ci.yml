@@ -78,11 +78,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm build
+        run: pnpm build:ci
         env:
           # Provide minimal env vars for build (no actual secrets needed for build check)
           POSTGRES_URL: "postgresql://user:pass@localhost:5432/db"
           BETTER_AUTH_SECRET: "build-check-secret-32-characters!"
           NEXT_PUBLIC_APP_URL: "http://localhost:3000"
-          # Skip database migration during CI build
-          SKIP_ENV_VALIDATION: "true"

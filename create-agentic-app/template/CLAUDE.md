@@ -103,6 +103,7 @@ BLOB_READ_WRITE_TOKEN=  # Leave empty for local dev, set for Vercel Blob in prod
 ```bash
 npm run dev          # Start dev server (DON'T run this yourself - ask user)
 npm run build        # Build for production (runs db:migrate first)
+npm run build:ci     # Build without database (for CI/CD pipelines)
 npm run start        # Start production server
 npm run lint         # Run ESLint (ALWAYS run after changes)
 npm run typecheck    # TypeScript type checking (ALWAYS run after changes)
