@@ -26,7 +26,14 @@ This command creates a new feature specification folder with requirements and im
    - Tasks should be specific enough for an agent to implement independently
    - Include dependencies between tasks where relevant
 
-4. **Exclude testing tasks**
+4. **Create action-required.md**
+   - Extract all manual steps that require human action
+   - Include tasks like: account creation, API key setup, environment variables, third-party service configuration, DNS settings, etc.
+   - Each task has a checkbox and brief context (one-liner explaining why it's needed)
+   - Keep these tasks in the implementation plan as well (for full context)
+   - If no manual steps exist, create the file with a "None required" note
+
+5. **Exclude testing tasks**
    - Do NOT include unit or e2e testing tasks
    - UNLESS the user explicitly asks for testing to be included
 
@@ -36,6 +43,7 @@ Ask the user what the requirements are first, then create the spec subfolder wit
 
 - `requirements.md`
 - `implementation-plan.md`
+- `action-required.md`
 
 ## Implementation Plan Format
 
@@ -69,6 +77,44 @@ Brief summary of what will be built.
       ...
 ```
 
+## action-required.md Format
+
+Use this structure for `action-required.md`:
+
+```markdown
+# Action Required: {Feature Name}
+
+Manual steps that must be completed by a human. These cannot be automated.
+
+## Before Implementation
+
+- [ ] **{Action}** - {Brief reason why this is needed}
+
+## During Implementation
+
+- [ ] **{Action}** - {Brief reason}
+
+## After Implementation
+
+- [ ] **{Action}** - {Brief reason}
+
+---
+
+> **Note:** These tasks are also listed in context within `implementation-plan.md`
+```
+
+### When No Manual Steps Exist
+
+If the feature has no manual steps, create the file with:
+
+```markdown
+# Action Required: {Feature Name}
+
+No manual steps required for this feature.
+
+All tasks can be implemented automatically.
+```
+
 ## Next Steps
 
 After creating the feature, inform the user:
@@ -77,9 +123,10 @@ After creating the feature, inform the user:
 >
 > **Next steps:**
 >
-> 1. Review the requirements and implementation plan
-> 2. Run `/publish-to-github` to create GitHub issues and project
-> 3. Use `/continue-feature` or drag the folder into a conversation to start implementing
+> 1. Review `action-required.md` for tasks you need to complete manually
+> 2. Review the requirements and implementation plan
+> 3. Run `/publish-to-github` to create GitHub issues and project
+> 4. Use `/continue-feature` to start implementing
 
 ## Notes
 
@@ -87,3 +134,4 @@ After creating the feature, inform the user:
 - Tasks should produce working, testable code when complete
 - Use clear, descriptive task names that explain what will be done
 - Note dependencies explicitly when tasks must be done in order
+- Common manual tasks: account creation, API key generation, environment variables, OAuth app configuration, DNS/domain setup, billing setup, third-party service registration
