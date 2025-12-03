@@ -7,9 +7,9 @@ description: Publish a feature from /specs to GitHub Issues and Projects
 This command publishes a feature from the /specs folder to GitHub, creating:
 
 - An Epic issue containing the full requirements
-- Individual task issues for each item in the implementation plan
+- Phase issues for each phase in the implementation plan (with task checklists)
 - A GitHub Project to track progress
-- Labels for organization and sequencing
+- Labels for organization
 - A `github.md` file in the specs folder with all references
 
 ## Prerequisites
@@ -34,7 +34,7 @@ If no folder is specified, ask the user which feature to publish.
 
 - **Feature name**: Use the folder name (e.g., `answer-scoring`)
 - **Feature title**: Parse the main heading from `requirements.md`
-- **Tasks**: Parse all checkbox items from `implementation-plan.md`, noting their phase
+- **Phases**: Parse all phases from `implementation-plan.md`, including phase title, description, and task checklists
 
 ### 3. Get Repository Information
 
@@ -71,9 +71,9 @@ gh issue create \
 
 Capture the issue number from the output (e.g., `#100`).
 
-### 6. Create Task Issues
+### 6. Create Phase Issues
 
-For each task in the implementation plan, create an issue:
+For each phase in the implementation plan, create an issue containing all tasks for that phase:
 
 **Issue body template:**
 
@@ -82,52 +82,95 @@ For each task in the implementation plan, create an issue:
 
 Part of Epic: #{epic-number}
 
-## Task
+## Overview
 
-{Task description from implementation plan}
+{Phase description/focus from implementation plan}
+
+## Tasks
+
+{Copy the full task checklist from the implementation plan for this phase, preserving markdown checkboxes}
 
 ## Acceptance Criteria
 
-- [ ] Implementation complete
+- [ ] All tasks in this phase completed
 - [ ] Code passes lint and typecheck
 - [ ] Changes follow project conventions
-
-## Metadata
-
-- **Sequence**: {sequence-number}
-- **Depends on**: {comma-separated list of dependency issue numbers, or "None"}
-- **Phase**: {phase-number}
 ```
 
 **Command:**
 
 ```bash
 gh issue create \
-  --title "{Task description}" \
+  --title "Phase {n}: {Phase Title}" \
   --label "feature/{feature-name}" \
   --label "phase-{n}" \
   --body "{issue-body}"
 ```
 
-Capture each issue number to build the dependency chain.
+Capture each phase issue number for linking.
 
-### 7. Update Epic with Task List
+### 6a. Handle Complex Phases (Optional)
 
-Edit the Epic issue to include a task list linking all sub-issues:
+If a phase meets any of these criteria, consider breaking out individual tasks as separate issues:
+
+- Phase has **more than 15 tasks**
+- A task has **nested sub-tasks** (indented checkboxes)
+- A task is marked with `[complex]` in the implementation plan
+
+**For complex phases:**
+
+1. Create the phase issue as normal (it becomes the parent)
+2. For each complex task, create a separate task issue:
+
+```bash
+gh issue create \
+  --title "{Task description}" \
+  --label "feature/{feature-name}" \
+  --label "phase-{n}" \
+  --body "## Context
+
+Part of Phase: #{phase-issue-number}
+Part of Epic: #{epic-number}
+
+## Task
+
+{Task description with any sub-tasks}
+
+## Acceptance Criteria
+
+- [ ] Implementation complete
+- [ ] Code passes lint and typecheck
+- [ ] Changes follow project conventions"
+```
+
+3. Update the phase issue to replace the task checkbox with a linked issue reference:
+
+**Before:**
+```markdown
+- [ ] Create complex authentication system [complex]
+```
+
+**After:**
+```markdown
+- [ ] #{task-issue-number} Create complex authentication system
+```
+
+This way the phase issue still tracks all work, but complex tasks get their own issue for detailed discussion and tracking.
+
+### 7. Update Epic with Phase List
+
+Edit the Epic issue to include a list linking all phase issues:
 
 ```bash
 gh issue edit {epic-number} --body "{original-body}
 
 ---
 
-## Tasks
+## Phases
 
-### Phase 1
-- [ ] #{task-1-number} {task-1-title}
-- [ ] #{task-2-number} {task-2-title}
-
-### Phase 2
-- [ ] #{task-3-number} {task-3-title}
+- [ ] #{phase-1-number} Phase 1: {Phase 1 Title}
+- [ ] #{phase-2-number} Phase 2: {Phase 2 Title}
+- [ ] #{phase-3-number} Phase 3: {Phase 3 Title}
 ...
 "
 ```
@@ -154,8 +197,9 @@ gh project link {project-number} --owner {owner} --repo {repository}
 
 ```bash
 gh project item-add {project-number} --owner {owner} --url "https://github.com/{repository}/issues/{epic-number}"
-gh project item-add {project-number} --owner {owner} --url "https://github.com/{repository}/issues/{task-1-number}"
-# ... repeat for all task issues
+gh project item-add {project-number} --owner {owner} --url "https://github.com/{repository}/issues/{phase-1-number}"
+# ... repeat for all phase issues
+# ... also add any complex task issues that were broken out
 ```
 
 ### 10. Create github.md
@@ -184,13 +228,22 @@ This feature has been published to GitHub.
 - [Epic Issue](https://github.com/{repository}/issues/{epic-number})
 - [Project Board](https://github.com/users/{owner}/projects/{project-number}) (also linked to repository)
 
-## Task Issues
+## Phase Issues
 
-| #         | Title   | Phase | Status |
-| --------- | ------- | ----- | ------ |
-| #{task-1} | {title} | 1     | Open   |
-| #{task-2} | {title} | 1     | Open   |
-| ...       | ...     | ...   | ...    |
+| #            | Title                    | Tasks | Status |
+| ------------ | ------------------------ | ----- | ------ |
+| #{phase-1}   | Phase 1: {Phase 1 Title} | {n}   | Open   |
+| #{phase-2}   | Phase 2: {Phase 2 Title} | {n}   | Open   |
+| ...          | ...                      | ...   | ...    |
+
+## Complex Task Issues (if any)
+
+| #          | Title        | Phase | Status |
+| ---------- | ------------ | ----- | ------ |
+| #{task-1}  | {Task title} | 1     | Open   |
+| ...        | ...          | ...   | ...    |
+
+_(Omit this section if no complex tasks were broken out)_
 
 ## Labels
 
@@ -204,7 +257,9 @@ This feature has been published to GitHub.
 After completion, report:
 
 - Epic issue URL
-- Number of task issues created
+- Number of phase issues created
+- Number of complex task issues created (if any)
+- Total number of tasks across all phases
 - Project board URL
 - Location of github.md file
 
@@ -215,7 +270,9 @@ Feature "{Feature Title}" published to GitHub!
 
 Epic: https://github.com/{repository}/issues/{epic-number}
 Project: https://github.com/users/{owner}/projects/{project-number} (linked to repo)
-Tasks created: 8
+Phases created: 4
+Complex task issues: 2 (optional, only if any were created)
+Total tasks: 46
 
 The github.md file has been created at specs/{feature-name}/github.md
 
@@ -233,6 +290,9 @@ and say "continue with this feature" or use /continue-feature.
 
 ## Notes
 
-- Task sequence numbers should be assigned based on order within phases (Phase 1 tasks get 1, 2, 3, etc., Phase 2 continues from there)
-- Dependencies within the same phase are generally sequential
-- Cross-phase dependencies should be explicit in the implementation plan
+- Each phase issue contains the full task checklist from the implementation plan
+- Tasks within a phase issue can be checked off as they're completed
+- Phases should be executed sequentially (Phase 1 → Phase 2 → Phase 3, etc.)
+- The Epic provides a high-level view with links to all phase issues
+- Use the `[complex]` marker in implementation plans to flag tasks that need their own issue
+- When breaking out complex tasks, the phase issue remains the parent tracker

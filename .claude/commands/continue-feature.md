@@ -36,7 +36,7 @@ If `github.md` doesn't exist, inform the user:
 
 > "This feature hasn't been published to GitHub yet. Run `/publish-to-github` first to create the GitHub issues and project."
 
-### 3. Query Open Tasks
+### 3. Query Open Issues
 
 List all open issues for this feature:
 
@@ -48,41 +48,58 @@ gh issue list \
   --limit 100
 ```
 
-### 4. Parse and Sort Tasks
+### 4. Identify Current Phase
 
-For each issue returned:
+From the issues returned:
 
-1. Extract the `Sequence` number from the issue body (format: `**Sequence**: N`)
-2. Extract dependencies from the issue body (format: `**Depends on**: #X, #Y` or `None`)
-3. Skip the Epic issue (has label `epic`)
+1. Skip the Epic issue (has label `epic`)
+2. Identify phase issues by title format: `Phase N: {Phase Title}`
+3. Identify any complex task issues (non-epic, non-phase issues)
+4. Sort phase issues by phase number (Phase 1 before Phase 2, etc.)
 
-### 5. Check Dependencies
+### 5. Select Next Work Item
 
-For each potential task:
+**Priority order:**
 
-1. Parse its dependencies
-2. Check if all dependency issues are closed: `gh issue view {dep-number} --json state -q .state`
-3. A task is "available" if all its dependencies are `CLOSED`
+1. **Complex task issues first**: If there are open complex task issues belonging to the current phase, work on the one with the lowest issue number
+2. **Phase issue tasks**: Otherwise, look at the earliest open phase issue and find the first unchecked task in its checklist
 
-### 6. Select Next Task
+**To find the next task in a phase issue:**
 
-From all available (unblocked) tasks, select the one with the **lowest sequence number**.
+1. Read the phase issue body
+2. Parse the `## Tasks` section
+3. Find the first unchecked item: `- [ ]` (not `- [x]`)
+4. If all tasks are checked, the phase is complete - close it and move to next phase
 
-If no tasks are available:
+If no work is available:
 
-- If all tasks are closed: Report "🎉 All tasks for {feature_name} are complete!"
-- If tasks exist but are blocked: Report which tasks are blocked and by what
+- If all phases are closed: Report "🎉 All tasks for {feature_name} are complete!"
+- If current phase has all tasks checked: Close the phase issue and continue to next phase
 
-### 7. Display Task Information
+### 6. Display Task Information
 
 Before implementing, show:
 
-```
-📋 Next Task: #{number} - {title}
+**For a task from a phase issue:**
 
-Phase: {phase}
-Sequence: {sequence}
-Dependencies: {deps or "None"}
+```
+📋 Next Task: {task description}
+
+Phase: {phase number} - {phase title}
+Issue: #{phase-issue-number}
+Task: {task number} of {total tasks in phase}
+
+Proceeding with implementation...
+```
+
+**For a complex task issue:**
+
+```
+📋 Next Task: #{issue-number} - {title}
+
+Phase: {phase number}
+Type: Complex task (separate issue)
+Parent Phase Issue: #{phase-issue-number}
 
 ## Task Description
 {task description from issue body}
@@ -90,13 +107,15 @@ Dependencies: {deps or "None"}
 Proceeding with implementation...
 ```
 
-### 8. Set Issue Status to "In Progress"
+### 7. Set Issue Status to "In Progress"
 
 Before starting implementation, update the issue status on the GitHub Project board. This is **required** when `project_number` exists in `github.md`.
 
+**Note:** Update the phase issue (or complex task issue if working on one) to "In Progress".
+
 **IMPORTANT**: Do NOT rely on labels like "status/in-progress" as they may not exist in the repository. Always update the Project board status directly.
 
-#### Step 8.1: Add a comment indicating work has started
+#### Step 7a: Add a comment indicating work has started
 
 ```bash
 gh issue comment {issue-number} --repo {repository} --body "🚀 **Status Update**: Implementation started
@@ -104,7 +123,7 @@ gh issue comment {issue-number} --repo {repository} --body "🚀 **Status Update
 Working on this task now..."
 ```
 
-#### Step 8.2: Get the project item ID for this issue
+#### Step 7b: Get the project item ID for this issue
 
 ```bash
 gh project item-list {project_number} --owner {owner} --format json
@@ -114,7 +133,7 @@ Parse the JSON output to find the item where `content.number` matches your issue
 
 Example: For issue #8, find the item with `"content": {"number": 8, ...}` and note its `"id"` value (e.g., `"PVTI_lAHOBLPcNM4BJm9zzgh_JP0"`).
 
-#### Step 8.3: Get the Status field ID and option IDs
+#### Step 7c: Get the Status field ID and option IDs
 
 ```bash
 gh project field-list {project_number} --owner {owner} --format json
@@ -125,7 +144,7 @@ From the output, find the field with `"name": "Status"`. Extract:
 - `id` - this is the `{status_field_id}` (e.g., `"PVTSSF_lAHOBLPcNM4BJm9zzg5uLNA"`)
 - `options` array - find the option with `"name": "In Progress"` and note its `id` as `{in_progress_option_id}` (e.g., `"47fc9ee4"`)
 
-#### Step 8.4: Construct the project ID
+#### Step 7d: Construct the project ID
 
 The project ID follows the pattern `PVT_kwHO{owner_id}M4{project_suffix}`. You can derive it from the item IDs which contain the same pattern, or use:
 
@@ -133,7 +152,7 @@ The project ID follows the pattern `PVT_kwHO{owner_id}M4{project_suffix}`. You c
 gh project view {project_number} --owner {owner} --format json
 ```
 
-#### Step 8.5: Update the project item status to "In Progress"
+#### Step 7e: Update the project item status to "In Progress"
 
 ```bash
 gh project item-edit \
@@ -146,21 +165,21 @@ gh project item-edit \
 **Complete Example** (with real values from a session):
 
 ```bash
-# Step 8.1: Comment on the issue
+# Step 7a: Comment on the issue
 gh issue comment 8 --repo leonvanzyl/json-anything --body "🚀 **Status Update**: Implementation started
 
 Working on this task now..."
 
-# Step 8.2: Get item ID (parse JSON to find item with content.number == 8)
+# Step 7b: Get item ID (parse JSON to find item with content.number == 8)
 gh project item-list 3 --owner leonvanzyl --format json
 # Found: "id": "PVTI_lAHOBLPcNM4BJm9zzgh_JP0"
 
-# Step 8.3: Get field IDs (find Status field and "In Progress" option)
+# Step 7c: Get field IDs (find Status field and "In Progress" option)
 gh project field-list 3 --owner leonvanzyl --format json
 # Found Status field: "id": "PVTSSF_lAHOBLPcNM4BJm9zzg5uLNA"
 # Found "In Progress" option: "id": "47fc9ee4"
 
-# Step 8.5: Update status
+# Step 7e: Update status
 gh project item-edit \
   --project-id PVT_kwHOBLPcNM4BJm9z \
   --id PVTI_lAHOBLPcNM4BJm9zzgh_JP0 \
@@ -170,7 +189,7 @@ gh project item-edit \
 
 **Note**: The `gh project item-edit` command returns no output on success. Verify the update worked by checking the project board or re-running `gh project item-list`.
 
-### 9. Read Full Context
+### 8. Read Full Context
 
 Before implementing:
 
@@ -178,7 +197,7 @@ Before implementing:
 2. Read `requirements.md` for feature requirements
 3. Review relevant parts of the codebase based on the task
 
-### 10. Implement the Task
+### 9. Implement the Task
 
 Implement the task following project conventions:
 
@@ -187,16 +206,39 @@ Implement the task following project conventions:
 - Run `pnpm lint && pnpm typecheck` after making changes
 - Fix any lint or type errors before committing
 
-### 11. Commit Changes
+### 10. Commit Changes
 
 After successful implementation:
 
 ```bash
 git add .
-git commit -m "feat: {task title} (closes #{issue-number})"
+git commit -m "feat: {task title}"
 ```
 
-The `closes #{issue-number}` syntax will automatically close the issue when pushed/merged.
+**Note:** For phase issues, we don't auto-close with `closes #` since the phase has multiple tasks. For complex task issues, you can use `closes #{issue-number}`.
+
+### 11. Update Phase Issue Checklist
+
+**For tasks from a phase issue**, update the phase issue body to check off the completed task:
+
+```bash
+# Get current issue body
+gh issue view {phase-issue-number} --json body -q .body > /tmp/issue-body.md
+
+# Edit the file to change "- [ ] {task}" to "- [x] {task}"
+# Then update the issue
+gh issue edit {phase-issue-number} --body-file /tmp/issue-body.md
+```
+
+Alternatively, add a comment noting the task completion:
+
+```bash
+gh issue comment {phase-issue-number} --body "✅ Completed: {task description}
+
+Commit: {commit-hash}"
+```
+
+**For complex task issues**, the issue can be closed directly after implementation.
 
 ### 12. Update Issue with Implementation Details
 
@@ -228,11 +270,17 @@ Ready for review and merge."
 
 **Note**: Do NOT try to update labels like "status/done" as they may not exist in the repository. The Project board status update in Step 13 is the authoritative status indicator.
 
-### 13. Update Project Board (if applicable)
+### 13. Update Project Board and Close Phase (if applicable)
 
-If the feature has an associated GitHub Project board, update the status to "Done". You should already have the `{item_id}`, `{status_field_id}`, and `{project_id}` from Step 8.
+If the feature has an associated GitHub Project board, update the status. You should already have the `{item_id}`, `{status_field_id}`, and `{project_id}` from Step 7.
 
-From the field list obtained in Step 8.3, find the option with `"name": "Done"` and note its `id` as `{done_option_id}` (e.g., `"98236657"`).
+**For complex task issues:** Update status to "Done" and close the issue.
+
+**For phase issues:**
+- If more tasks remain in the phase, keep status as "In Progress"
+- If all tasks in the phase are complete, update status to "Done" and close the phase issue
+
+From the field list obtained in Step 7c, find the option with `"name": "Done"` and note its `id` as `{done_option_id}` (e.g., `"98236657"`).
 
 ```bash
 gh project item-edit \
@@ -242,10 +290,10 @@ gh project item-edit \
   --single-select-option-id {done_option_id}
 ```
 
-**Complete Example** (continuing from Step 8):
+**Complete Example** (continuing from Step 7):
 
 ```bash
-# Using the same IDs from Step 8, but with "Done" option ID
+# Using the same IDs from Step 7, but with "Done" option ID
 gh project item-edit \
   --project-id PVT_kwHOBLPcNM4BJm9z \
   --id PVTI_lAHOBLPcNM4BJm9zzgh_JP0 \
@@ -259,13 +307,17 @@ gh project item-edit \
 
 After completing the task:
 
+**For a task from a phase issue:**
+
 ```
-✅ Task #{number} complete: {title}
+✅ Task complete: {task description}
+
+Phase: {phase number} - {phase title} (#{phase-issue-number})
+Progress: {completed}/{total} tasks in this phase
 
 GitHub Updates:
-- Issue #{number} status: "Done" ✅
-- Project board: Updated ✅ (if applicable)
-- Implementation details: Added to issue ✅
+- Phase issue checklist: Updated ✅
+- Implementation details: Added as comment ✅
 
 Changes made:
 - {summary of files changed}
@@ -275,7 +327,26 @@ Next steps:
 - Push changes: `git push`
 - Or continue: Drop the feature folder again and say "continue"
 
-Remaining tasks: {count} open, {count} blocked
+Phase status: {X} tasks remaining in current phase
+```
+
+**For a complex task issue:**
+
+```
+✅ Task #{issue-number} complete: {title}
+
+GitHub Updates:
+- Issue #{issue-number}: Closed ✅
+- Project board: Updated to "Done" ✅
+- Implementation details: Added to issue ✅
+
+Changes made:
+- {summary of files changed}
+- {summary of functionality added}
+
+Next steps:
+- Push changes: `git push`
+- Or continue: Drop the feature folder again and say "continue"
 ```
 
 ### 15. Prompt for Next Action
@@ -299,10 +370,10 @@ Or if you want to continue without GitHub integration, I can work from
 the implementation-plan.md file directly. Would you like to do that instead?
 ```
 
-### All tasks complete
+### All phases complete
 
 ```
-🎉 Congratulations! All tasks for "{feature_name}" are complete!
+🎉 Congratulations! All phases for "{feature_name}" are complete!
 
 Epic: https://github.com/{repository}/issues/{epic_issue}
 
@@ -310,17 +381,15 @@ You can close the Epic issue with:
 gh issue close {epic_issue}
 ```
 
-### All remaining tasks are blocked
+### Phase complete, moving to next
 
 ```
-⏸️ All remaining tasks are currently blocked.
+✅ Phase {n} complete! All tasks finished.
 
-Blocked tasks:
-- #{number} "{title}" - blocked by #{dep} (still open)
-- ...
+Closing Phase {n} issue...
+Moving to Phase {n+1}: {Phase Title}
 
-To unblock, complete these dependencies first, or manually close them if
-they're no longer needed.
+{Display next task from new phase}
 ```
 
 ### Implementation fails lint/typecheck

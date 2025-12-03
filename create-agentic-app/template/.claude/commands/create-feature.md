@@ -25,6 +25,7 @@ This command creates a new feature specification folder with requirements and im
    - Each task should have a checkbox: `[ ] Task description`
    - Tasks should be specific enough for an agent to implement independently
    - Include dependencies between tasks where relevant
+   - Mark complex tasks with `[complex]` suffix (these will get their own GitHub issue when published)
 
 4. **Create action-required.md**
    - Extract all manual steps that require human action
@@ -64,7 +65,9 @@ Brief summary of what will be built.
 
 - [ ] Task 1 description
 - [ ] Task 2 description (depends on Task 1)
-- [ ] Task 3 description
+- [ ] Task 3 description [complex]
+  - [ ] Sub-task 3a
+  - [ ] Sub-task 3b
 
 ## Phase 2: {Phase Name}
 
@@ -76,6 +79,8 @@ Brief summary of what will be built.
 - [ ] Task 5 description
       ...
 ```
+
+**Note:** Tasks marked with `[complex]` or containing nested sub-tasks will be created as separate GitHub issues when published (linked to their parent phase issue).
 
 ## action-required.md Format
 
@@ -135,3 +140,13 @@ After creating the feature, inform the user:
 - Use clear, descriptive task names that explain what will be done
 - Note dependencies explicitly when tasks must be done in order
 - Common manual tasks: account creation, API key generation, environment variables, OAuth app configuration, DNS/domain setup, billing setup, third-party service registration
+
+### When to Use `[complex]`
+
+Mark a task with `[complex]` when it:
+- Has multiple sub-tasks that need individual tracking
+- Requires significant architectural decisions or discussion
+- Spans multiple files or systems
+- Would benefit from its own GitHub issue for comments/review
+
+Most tasks should NOT be marked complex - reserve this for genuinely substantial work items.
