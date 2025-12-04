@@ -26,6 +26,9 @@ This command creates a new feature specification folder with requirements and im
    - Tasks should be specific enough for an agent to implement independently
    - Include dependencies between tasks where relevant
    - Mark complex tasks with `[complex]` suffix (these will get their own GitHub issue when published)
+   - **Add a `### Technical Details` section after each phase's tasks**
+   - **Capture ALL technical specifics from the planning conversation**: CLI commands, database schemas, code snippets, file paths, configuration values
+   - **This is the single source of truth** - anything not captured here is lost
 
 4. **Create action-required.md**
    - Extract all manual steps that require human action
@@ -69,6 +72,10 @@ Brief summary of what will be built.
   - [ ] Sub-task 3a
   - [ ] Sub-task 3b
 
+### Technical Details
+
+{Include CLI commands, code snippets, schemas, and other implementation specifics discussed during planning that are relevant to this phase's tasks.}
+
 ## Phase 2: {Phase Name}
 
 {Brief description}
@@ -77,10 +84,29 @@ Brief summary of what will be built.
 
 - [ ] Task 4 description (depends on Phase 1)
 - [ ] Task 5 description
-      ...
+
+### Technical Details
+
+{Technical details for Phase 2 tasks.}
 ```
 
 **Note:** Tasks marked with `[complex]` or containing nested sub-tasks will be created as separate GitHub issues when published (linked to their parent phase issue).
+
+## Capturing Technical Details
+
+**CRITICAL**: The implementation plan must capture ALL technical details discussed during planning. The plan is the single source of truth - anything not captured here is lost.
+
+Each phase should include a `### Technical Details` section containing:
+
+- **CLI commands**: Package installations, migrations, code generation
+- **Database schemas**: Table definitions, column types, relations
+- **Code snippets**: Key implementation patterns, type definitions, configuration
+- **File paths**: Where code should be created or modified
+- **Environment variables**: Required config values and their purpose
+- **API endpoints**: Routes, methods, request/response shapes
+- **Third-party integration**: SDK usage, webhook formats, auth flows
+
+These details flow through to GitHub issues via `/publish-to-github`, making them available to any agent (or human) implementing the tasks.
 
 ## action-required.md Format
 
@@ -140,6 +166,7 @@ After creating the feature, inform the user:
 - Use clear, descriptive task names that explain what will be done
 - Note dependencies explicitly when tasks must be done in order
 - Common manual tasks: account creation, API key generation, environment variables, OAuth app configuration, DNS/domain setup, billing setup, third-party service registration
+- **Don't lose planning details**: If technical specifics were discussed during planning (commands, schemas, code patterns), they MUST appear in the `### Technical Details` section of the relevant phase. Review the conversation before finalizing to ensure nothing is missed.
 
 ### When to Use `[complex]`
 
