@@ -90,6 +90,10 @@ Part of Epic: #{epic-number}
 
 {Copy the full task checklist from the implementation plan for this phase, preserving markdown checkboxes}
 
+## Technical Details
+
+[Copy the full technical details section from the implementation plan for this phase]
+
 ## Acceptance Criteria
 
 - [ ] All tasks in this phase completed
@@ -146,11 +150,13 @@ Part of Epic: #{epic-number}
 3. Update the phase issue to replace the task checkbox with a linked issue reference:
 
 **Before:**
+
 ```markdown
 - [ ] Create complex authentication system [complex]
 ```
 
 **After:**
+
 ```markdown
 - [ ] #{task-issue-number} Create complex authentication system
 ```
@@ -230,18 +236,18 @@ This feature has been published to GitHub.
 
 ## Phase Issues
 
-| #            | Title                    | Tasks | Status |
-| ------------ | ------------------------ | ----- | ------ |
-| #{phase-1}   | Phase 1: {Phase 1 Title} | {n}   | Open   |
-| #{phase-2}   | Phase 2: {Phase 2 Title} | {n}   | Open   |
-| ...          | ...                      | ...   | ...    |
+| #          | Title                    | Tasks | Status |
+| ---------- | ------------------------ | ----- | ------ |
+| #{phase-1} | Phase 1: {Phase 1 Title} | {n}   | Open   |
+| #{phase-2} | Phase 2: {Phase 2 Title} | {n}   | Open   |
+| ...        | ...                      | ...   | ...    |
 
 ## Complex Task Issues (if any)
 
-| #          | Title        | Phase | Status |
-| ---------- | ------------ | ----- | ------ |
-| #{task-1}  | {Task title} | 1     | Open   |
-| ...        | ...          | ...   | ...    |
+| #         | Title        | Phase | Status |
+| --------- | ------------ | ----- | ------ |
+| #{task-1} | {Task title} | 1     | Open   |
+| ...       | ...          | ...   | ...    |
 
 _(Omit this section if no complex tasks were broken out)_
 

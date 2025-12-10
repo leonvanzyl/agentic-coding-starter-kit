@@ -197,9 +197,9 @@ Before implementing:
 2. Read `requirements.md` for feature requirements
 3. Review relevant parts of the codebase based on the task
 
-### 9. Implement the Task
+### 9. Implement the Tasks
 
-Implement the task following project conventions:
+Implement all tasks in the issue or phase following project conventions:
 
 - Follow existing code patterns in the codebase
 - Use the `@/` import alias
@@ -277,6 +277,7 @@ If the feature has an associated GitHub Project board, update the status. You sh
 **For complex task issues:** Update status to "Done" and close the issue.
 
 **For phase issues:**
+
 - If more tasks remain in the phase, keep status as "In Progress"
 - If all tasks in the phase are complete, update status to "Done" and close the phase issue
 
@@ -418,7 +419,7 @@ This maintains backward compatibility with the original workflow.
 
 ## Notes
 
-- Only implement ONE task per invocation unless the user explicitly asks for more
+- Implement ALL tasks per invocation unless the user explicitly asks to implement less
 - Always run lint and typecheck before committing
 - Preserve the task's acceptance criteria when checking completion
 - If a task is unclear, ask for clarification rather than guessing

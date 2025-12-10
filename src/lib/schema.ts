@@ -1,5 +1,8 @@
 import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
 
+// IMPORTANT! ID fields should ALWAYS use UUID types, EXCEPT the BetterAuth tables.
+
+
 export const user = pgTable(
   "user",
   {
