@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, LogOut } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession, signOut } from "@/lib/auth-client";
-import { SignInButton } from "./sign-in-button";
 
 export function UserProfile() {
   const { data: session, isPending } = useSession();
@@ -25,8 +25,15 @@ export function UserProfile() {
 
   if (!session) {
     return (
-      <div className="flex flex-col items-center gap-4 p-6">
-        <SignInButton />
+      <div className="flex items-center gap-2">
+        <Link href="/login">
+          <Button variant="ghost" size="sm">
+            Sign in
+          </Button>
+        </Link>
+        <Link href="/register">
+          <Button size="sm">Sign up</Button>
+        </Link>
       </div>
     );
   }

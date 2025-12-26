@@ -2,27 +2,16 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { signIn, useSession } from "@/lib/auth-client"
+import { requestPasswordReset } from "@/lib/auth-client"
 
-export function SignInButton() {
-  const { data: session, isPending: sessionPending } = useSession()
-  const router = useRouter()
+export function ForgotPasswordForm() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState(false)
   const [isPending, setIsPending] = useState(false)
-
-  if (sessionPending) {
-    return <Button disabled>Loading...</Button>
-  }
-
-  if (session) {
-    return null
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,23 +19,37 @@ export function SignInButton() {
     setIsPending(true)
 
     try {
-      const result = await signIn.email({
+      const result = await requestPasswordReset({
         email,
-        password,
-        callbackURL: "/dashboard",
+        redirectTo: "/reset-password",
       })
 
       if (result.error) {
-        setError(result.error.message || "Failed to sign in")
+        setError(result.error.message || "Failed to send reset email")
       } else {
-        router.push("/dashboard")
-        router.refresh()
+        setSuccess(true)
       }
     } catch {
       setError("An unexpected error occurred")
     } finally {
       setIsPending(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="space-y-4 w-full max-w-sm text-center">
+        <p className="text-sm text-muted-foreground">
+          If an account exists with that email, a password reset link has been sent.
+          Check your terminal for the reset URL.
+        </p>
+        <Link href="/login">
+          <Button variant="outline" className="w-full">
+            Back to sign in
+          </Button>
+        </Link>
+      </div>
+    )
   }
 
   return (
@@ -63,33 +66,16 @@ export function SignInButton() {
           disabled={isPending}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          disabled={isPending}
-        />
-      </div>
       {error && (
         <p className="text-sm text-destructive">{error}</p>
       )}
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Signing in..." : "Sign in"}
+        {isPending ? "Sending..." : "Send reset link"}
       </Button>
       <div className="text-center text-sm text-muted-foreground">
-        <Link href="/forgot-password" className="hover:underline">
-          Forgot password?
-        </Link>
-      </div>
-      <div className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="text-primary hover:underline">
-          Sign up
+        Remember your password?{" "}
+        <Link href="/login" className="text-primary hover:underline">
+          Sign in
         </Link>
       </div>
     </form>

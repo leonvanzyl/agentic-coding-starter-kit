@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Calendar, User, Shield, ArrowLeft, Lock, Smartphone } from "lucide-react";
 import { toast } from "sonner";
@@ -33,17 +33,18 @@ export default function ProfilePage() {
   const [securityOpen, setSecurityOpen] = useState(false);
   const [emailPrefsOpen, setEmailPrefsOpen] = useState(false);
 
-  if (isPending) {
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.push("/");
+    }
+  }, [isPending, session, router]);
+
+  if (isPending || !session) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div>Loading...</div>
       </div>
     );
-  }
-
-  if (!session) {
-    router.push("/");
-    return null;
   }
 
   const user = session.user;

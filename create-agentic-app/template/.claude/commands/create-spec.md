@@ -1,5 +1,5 @@
 ---
-description: Create a new feature with requirements and implementation plan
+description: Create a new spec with requirements and implementation plan
 ---
 
 # Create Feature
@@ -171,6 +171,7 @@ After creating the feature, inform the user:
 ### When to Use `[complex]`
 
 Mark a task with `[complex]` when it:
+
 - Has multiple sub-tasks that need individual tracking
 - Requires significant architectural decisions or discussion
 - Spans multiple files or systems

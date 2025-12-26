@@ -8,7 +8,7 @@ This is a Next.js 16 boilerplate for building AI-powered applications with authe
 
 - **Framework**: Next.js 16 with App Router, React 19, TypeScript
 - **AI Integration**: Vercel AI SDK 5 + OpenRouter (access to 100+ AI models)
-- **Authentication**: BetterAuth with Google OAuth
+- **Authentication**: BetterAuth with Email/Password
 - **Database**: PostgreSQL with Drizzle ORM
 - **UI**: shadcn/ui components with Tailwind CSS 4
 - **Styling**: Tailwind CSS with dark mode support (next-themes)
@@ -34,6 +34,11 @@ This is a Next.js 16 boilerplate for building AI-powered applications with authe
 ```
 src/
 ├── app/                          # Next.js App Router
+│   ├── (auth)/                  # Auth route group
+│   │   ├── login/               # Login page
+│   │   ├── register/            # Registration page
+│   │   ├── forgot-password/     # Forgot password page
+│   │   └── reset-password/      # Reset password page
 │   ├── api/
 │   │   ├── auth/[...all]/       # Better Auth catch-all route
 │   │   ├── chat/route.ts        # AI chat endpoint (OpenRouter)
@@ -45,7 +50,10 @@ src/
 │   └── layout.tsx               # Root layout
 ├── components/
 │   ├── auth/                    # Authentication components
-│   │   ├── sign-in-button.tsx
+│   │   ├── sign-in-button.tsx   # Sign in form
+│   │   ├── sign-up-form.tsx     # Sign up form
+│   │   ├── forgot-password-form.tsx
+│   │   ├── reset-password-form.tsx
 │   │   ├── sign-out-button.tsx
 │   │   └── user-profile.tsx
 │   ├── ui/                      # shadcn/ui components
@@ -82,10 +90,6 @@ POSTGRES_URL=postgresql://user:password@localhost:5432/db_name
 
 # Better Auth
 BETTER_AUTH_SECRET=32-char-random-string
-
-# Google OAuth
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 # AI via OpenRouter
 OPENROUTER_API_KEY=sk-or-v1-your-key
