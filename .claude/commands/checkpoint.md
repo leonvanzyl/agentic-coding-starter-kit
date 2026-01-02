@@ -1,3 +1,7 @@
+---
+description: Create commit with detailed comment
+---
+
 Please create a comprehensive checkpoint commit with the following steps:
 
 1. **Initialize Git if needed**: Run `git init` if git has not been instantiated for the project yet.
@@ -26,6 +30,7 @@ Please create a comprehensive checkpoint commit with the following steps:
 5. **Execute the commit**: Create the commit with the properly formatted message following this repository's conventions.
 
 IMPORTANT:
+
 - Do NOT skip any files - include everything
 - Make the commit message descriptive enough that someone reviewing the git log can understand what was accomplished
 - Follow the project's existing commit message conventions (check git log first)
